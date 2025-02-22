@@ -7,6 +7,7 @@ import {imagesUpload} from "../multer";
 
 const picturesRouter = express.Router();
 
+
 picturesRouter.get('/', async (
     req,
     res,
@@ -57,10 +58,13 @@ picturesRouter.post("/", imagesUpload.single('image'), auth, permit("admin", "us
     }
 
     try {
+        if (pictureData.title.trim().length === 0 || pictureData.image && pictureData.image.trim().length === 0) {
+            res.status(411).send({error: "Title and picture is must be present in the request."});
+            return
+        }
         const picture = new Picture(pictureData);
         await picture.save();
         res.send({picture, message: "Picture saved."});
-
     } catch (error) {
         if (error instanceof Error.ValidationError) {
             res.status(400).send(error);

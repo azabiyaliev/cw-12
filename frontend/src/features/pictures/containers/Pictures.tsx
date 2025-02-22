@@ -4,7 +4,7 @@ import {deletePictureById, getPickedPicture, getPictures} from "../picturesThunk
 import React, {useEffect} from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
-import {Card, CardActionArea, CardActions, CardContent, CardMedia, CircularProgress, Typography, IconButton} from "@mui/material";
+import {Card, CardActions, CardContent, CardMedia, CircularProgress, Typography, IconButton} from "@mui/material";
 import {apiUrl} from "../../../globalConstants.ts";
 import Box from "@mui/material/Box";
 import ModalWindow from "../../../components/ModalWindow/ModalWindow.tsx";
@@ -63,7 +63,7 @@ const Pictures = () => {
                                                 boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
                                                 "&:hover": {boxShadow: 10}
                                             }}>
-                                                <CardActionArea>
+                                                <Box>
                                                     <ModalWindow onClose={closeModal} open={open}
                                                                  image={apiUrl + "/" + (pickedPicture ? pickedPicture.image : null)}
                                                                  title={pickedPicture ? pickedPicture.title : ""}/>
@@ -113,7 +113,7 @@ const Pictures = () => {
                                                         </Box>
                                                     </Box>
 
-                                                </CardActionArea>
+                                                </Box>
                                             </Card>
                                         </Grid>
                                     )

@@ -54,43 +54,42 @@ const MyPictures = () => {
                 ) : (
                     <>
                         <Box>
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                mt: 2,
+                                fontSize: 18,
+                                textTransform: "uppercase"
+                            }}>
+                                <Typography variant="h6">
+                                    {userName}`s Gallery
+                                </Typography>
+                                {(user && (user.role === "admin" || (user._id === params.idUser))) ?
+                                    (<Typography
+                                        sx={{
+                                            color: "inherit",
+                                            textDecoration: "none",
+                                            textTransform: "uppercase",
+                                            fontSize: 18,
+                                            mr: 1
+                                        }}
+                                        component={NavLink}
+                                        to={"/addNewPicture"}
+                                    >
+                                        Add new photo
+                                    </Typography>) : null}
+
+                            </Box>
                             {pictures.length === 0 && !loadingPictures ? (
                                 <Typography variant="h6">
                                     No pictures yet
                                 </Typography>
                             ) : (
-                                <>
+                                <Grid container direction={"row"} spacing={3}>
                                     {pictures.map((picture) => {
                                         return (
                                             <>
-                                                <Box sx={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    alignItems: "center",
-                                                    mt: 2,
-                                                    fontSize: 18,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                    <Typography variant="h6">
-                                                        {userName}`s Gallery
-                                                    </Typography>
-                                                    {(user && (user.role === "admin" || (user._id === picture.user._id))) ?
-                                                        (<Typography
-                                                            sx={{
-                                                                color: "inherit",
-                                                                textDecoration: "none",
-                                                                textTransform: "uppercase",
-                                                                fontSize: 18,
-                                                                mr: 1
-                                                            }}
-                                                            component={NavLink}
-                                                            to={"/addNewPicture"}
-                                                        >
-                                                            Add new photo
-                                                        </Typography>) : null}
-
-                                                </Box>
-                                                <Grid container direction={"row"} spacing={3}>
                                                     <Grid key={picture._id} size={4}>
                                                         <Card sx={{
                                                             display: 'flex',
@@ -148,13 +147,12 @@ const MyPictures = () => {
                                                             </CardActionArea>
                                                         </Card>
                                                     </Grid>
-                                                </Grid>
 
                                             </>
 
                                         )
                                     })}
-                                </>
+                                </Grid>
                             )}
                         </Box>
                     </>

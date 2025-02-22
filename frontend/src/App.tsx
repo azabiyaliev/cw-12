@@ -5,6 +5,7 @@ import LoginPage from "./features/users/containers/LoginPage.tsx";
 import {Typography} from "@mui/material";
 import Pictures from "./features/pictures/containers/Pictures.tsx";
 import MyPictures from "./features/pictures/containers/MyPictures.tsx";
+import NewPicture from "./features/pictures/containers/NewPicture.tsx";
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
                 <Route path="/" element={<Pictures/>}/>
                 <Route path="/pictures" element={<Pictures/>}/>
                 <Route path="/users/:idUser" element={<MyPictures/>}/>
+                <Route path="/addNewPicture" element={<NewPicture/>}/>
             </Routes>
         </>
     )

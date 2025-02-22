@@ -51,4 +51,9 @@ export interface IPicture {
     image: string;
 }
 
+export interface Picture {
+    title: string;
+    image: File | null;
+}
+
 
