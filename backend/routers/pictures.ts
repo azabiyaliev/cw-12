@@ -18,7 +18,7 @@ picturesRouter.get('/', async (
             if(!picturesByIdUser) res.status(404).send("Not Found");
             res.send(picturesByIdUser);
         }
-        const pictures = await Picture.find();
+        const pictures = await Picture.find().populate("user", "displayName");
         res.status(200).json(pictures);
     } catch (e) {
         next(e);

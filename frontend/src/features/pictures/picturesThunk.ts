@@ -9,3 +9,19 @@ export const getPictures = createAsyncThunk<IPicture[], void>(
         return response.data;
     }
 )
+
+//export const getPickedCocktail = createAsyncThunk<ICocktail, string>(
+//     "cocktails/getPickedCocktail",
+//     async (cocktail) => {
+//         const response = await axiosAPI.get<ICocktail>(`/cocktails/${cocktail}`)
+//         return response.data;
+//     }
+// )
+
+export const getPickedPicture = createAsyncThunk<IPicture, string>(
+    "pictures/getPickedPictures",
+    async (picture) => {
+        const response = await axiosAPI.get<IPicture>(`pictures/${picture}`)
+        return response.data;
+    }
+)
