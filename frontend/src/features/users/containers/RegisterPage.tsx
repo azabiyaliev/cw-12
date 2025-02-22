@@ -1,22 +1,26 @@
-import { useState } from 'react';
-import {IRegister} from "../../../types";
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid2';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { Avatar, Button } from '@mui/material';
-import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import { selectRegisterError } from '../usersSlice.ts';
-import {NavLink, useNavigate} from 'react-router-dom';
-import {register} from "../usersThunk.ts";
+import { useState } from "react";
+import { IRegister } from "../../../types";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid2";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { Avatar, Button } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks.ts";
+import { selectRegisterError } from "../usersSlice.ts";
+import { NavLink, useNavigate } from "react-router-dom";
+import { register } from "../usersThunk.ts";
 import * as React from "react";
 import FileInput from "../../../components/FileInput/FileInput.tsx";
-import HowToRegIcon from '@mui/icons-material/HowToReg';
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+
+const regEmail = /^(\w+[-.]?\w+)@(\w+)([.-]?\w+)?(\.[a-zA-Z]{2,3})$/;
 
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
   const registerError = useAppSelector(selectRegisterError);
+  const [errors, setErrors] = useState<{ email?: string }>({});
+
   const navigate = useNavigate();
   const [form, setForm] = useState<IRegister>({
     email: "",
@@ -26,8 +30,18 @@ const RegisterPage = () => {
   });
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setForm(prevState => ({...prevState, [name]: value}));
+    const { name, value } = e.target;
+    setForm((prevState) => ({ ...prevState, [name]: value }));
+    if (name === "email") {
+      if (regEmail.test(value)) {
+        setErrors((prevState) => ({ ...prevState, email: "" }));
+      } else {
+        setErrors((prevState) => ({
+          ...prevState,
+          email: "Invalid email format",
+        }));
+      }
+    }
   };
 
   const submitHandler = async (e: React.FormEvent) => {
@@ -35,7 +49,7 @@ const RegisterPage = () => {
 
     try {
       await dispatch(register(form)).unwrap();
-      navigate('/');
+      navigate("/");
     } catch (e) {
       console.log(e);
     }
@@ -60,29 +74,33 @@ const RegisterPage = () => {
     }
   };
 
-
   return (
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
           marginTop: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          border: '1px solid gray',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          border: "1px solid gray",
           borderRadius: 4,
           p: 2,
-          boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)'
+          boxShadow: "0 4px 12px rgba(255, 255, 255, 0.2)",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <HowToRegIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate onSubmit={submitHandler} sx={{ mt: 3 }}>
-          <Grid container direction={'column'} size={12} spacing={2}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={submitHandler}
+          sx={{ mt: 3 }}
+        >
+          <Grid container direction={"column"} size={12} spacing={2}>
             <Grid size={12}>
               <TextField
                 fullWidth
@@ -92,8 +110,8 @@ const RegisterPage = () => {
                 name="email"
                 value={form.email}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('email'))}
-                helperText={getFieldError('email')}
+                error={Boolean(getFieldError("email"))}
+                helperText={errors.email}
               />
             </Grid>
 
@@ -107,29 +125,29 @@ const RegisterPage = () => {
                 id="password"
                 value={form.password}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('password'))}
-                helperText={getFieldError('password')}
+                error={Boolean(getFieldError("password"))}
+                helperText={getFieldError("password")}
               />
             </Grid>
             <Grid size={12}>
               <TextField
-                  required
-                  fullWidth
-                  name="displayName"
-                  label="Display name"
-                  type="displayName"
-                  id="displayName"
-                  value={form.displayName}
-                  onChange={inputChangeHandler}
-                  error={Boolean(getFieldError('displayName'))}
-                  helperText={getFieldError('displayName')}
+                required
+                fullWidth
+                name="displayName"
+                label="Display name"
+                type="displayName"
+                id="displayName"
+                value={form.displayName}
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError("displayName"))}
+                helperText={getFieldError("displayName")}
               />
             </Grid>
-            <Grid size={{ xs: 12 }} >
+            <Grid size={{ xs: 12 }}>
               <FileInput
-                  name="avatar"
-                  label="Avatar"
-                  onGetFile={fileEventChangeHandler}
+                name="avatar"
+                label="Avatar"
+                onGetFile={fileEventChangeHandler}
               />
             </Grid>
           </Grid>
@@ -141,9 +159,12 @@ const RegisterPage = () => {
           >
             Sign Up
           </Button>
-          <Grid container justifyContent="center" >
-            <Grid >
-              <NavLink to={"/login"} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Grid container justifyContent="center">
+            <Grid>
+              <NavLink
+                to={"/login"}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 Already have an account? Sign in
               </NavLink>
             </Grid>

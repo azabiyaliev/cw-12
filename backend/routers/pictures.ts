@@ -7,7 +7,6 @@ import {imagesUpload} from "../multer";
 
 const picturesRouter = express.Router();
 
-
 picturesRouter.get('/', async (
     req,
     res,

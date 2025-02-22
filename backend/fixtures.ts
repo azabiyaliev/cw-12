@@ -38,42 +38,42 @@ const run = async () => {
     await Picture.create(
         {
             user: Martin._id,
-            title: "Земля",
+            title: "Earth",
             image: "fixtures/Earth.jpg",
         },
         {
             user: Lazlo._id,
-            title: "Иссык Куль",
+            title: "Lake «Issyk-Kul»",
             image: "fixtures/IssykKul.jpg",
         },
         {
             user: Martin._id,
-            title: "Леонардо Ди Каприо",
+            title: "Leonardo Di Caprio",
             image: "fixtures/LeonardoDiCaprio.jpg",
         },
         {
             user: Lazlo._id,
-            title: "Манты",
+            title: "Food «Manty»",
             image: "fixtures/Manty.jpg",
         },
         {
             user: Martin._id,
-            title: "Нью-Йорк",
+            title: "New-York",
             image: "fixtures/NewYork.jpg",
         },
         {
             user: Lazlo._id,
-            title: "Реал Мадрид",
+            title: "Real Madrid",
             image: "fixtures/RealMadrid.jpg",
         },
         {
             user: Martin._id,
-            title: "Учиха Итачи",
+            title: "Uchiha Itachi",
             image: "fixtures/UchihaItachi.jpg",
         },
         {
             user: Lazlo._id,
-            title: "Тигр",
+            title: "Tiger",
             image: "fixtures/tiger.jpg",
         },
     )
