@@ -1,6 +1,6 @@
 import {IPicture} from "../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getPickedPicture, getPictures} from "./picturesThunk.ts";
+import {deletePictureById, getPickedPicture, getPictures} from "./picturesThunk.ts";
 import {RootState} from "../../app/store.ts";
 
 interface PictureState {
@@ -45,8 +45,16 @@ export const picturesSlice = createSlice({
             .addCase(getPickedPicture.rejected, (state) => {
                 state.loading = false
             })
+            .addCase(deletePictureById.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deletePictureById.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(deletePictureById.rejected, (state) => {
+                state.loading = false
+            })
     }
-
 })
 
 export const picturesReducer = picturesSlice.reducer;

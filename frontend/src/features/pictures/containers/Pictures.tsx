@@ -1,22 +1,24 @@
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {selectPickedPictures, selectPictures, selectPicturesLoading} from "../picturesSlice.ts";
-import {getPickedPicture, getPictures} from "../picturesThunk.ts";
+import {deletePictureById, getPickedPicture, getPictures} from "../picturesThunk.ts";
 import React, {useEffect} from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
-import {Card, CardActionArea, CardContent, CardMedia, CircularProgress, Typography} from "@mui/material";
+import {Card, CardActionArea, CardActions, CardContent, CardMedia, CircularProgress, Typography, IconButton} from "@mui/material";
 import {apiUrl} from "../../../globalConstants.ts";
 import Box from "@mui/material/Box";
 import ModalWindow from "../../../components/ModalWindow/ModalWindow.tsx";
 import {NavLink} from "react-router-dom";
+import {selectUser} from "../../users/usersSlice.ts";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 const Pictures = () => {
+    const user = useAppSelector(selectUser);
     const dispatch = useAppDispatch();
     const pictures = useAppSelector(selectPictures);
     const loading = useAppSelector(selectPicturesLoading);
     const pickedPicture = useAppSelector(selectPickedPictures)
-    console.log(pictures)
     const [open, setOpen] = React.useState(false);
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
@@ -28,6 +30,11 @@ const Pictures = () => {
     const pictureView = async (id: string) => {
         openModal();
         await dispatch(getPickedPicture(id));
+    }
+
+    const deletePicture = async (id: string) => {
+        await dispatch(deletePictureById(id));
+        await dispatch(getPictures());
     }
 
     return (
@@ -83,15 +90,25 @@ const Pictures = () => {
                                                                 >
                                                                     {picture.title}
                                                                 </Typography>
-                                                                <Typography
-                                                                    variant="h6" textAlign="center"
-                                                                    sx={{textDecoration: "none", color: "inherit"}}
-                                                                    fontWeight="bold"
-                                                                    to={`/users/${picture.user._id}`}
-                                                                    component={NavLink}
-                                                                >
-                                                                    От: {picture.user.displayName}
-                                                                </Typography>
+                                                                <Box
+                                                                    sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                                                                    <Typography
+                                                                        variant="h6" textAlign="center"
+                                                                        sx={{textDecoration: "none", color: "inherit"}}
+                                                                        fontWeight="bold"
+                                                                        to={`/users/${picture.user._id}`}
+                                                                        component={NavLink}
+                                                                    >
+                                                                        От: {picture.user.displayName}
+                                                                    </Typography>
+                                                                    {(user && user.role === "admin") ? (
+                                                                        <CardActions>
+                                                                            <IconButton
+                                                                                onClick={() => deletePicture(picture._id)}>
+                                                                                <DeleteIcon/>
+                                                                            </IconButton>
+                                                                        </CardActions>) : null}
+                                                                </Box>
                                                             </CardContent>
                                                         </Box>
                                                     </Box>
