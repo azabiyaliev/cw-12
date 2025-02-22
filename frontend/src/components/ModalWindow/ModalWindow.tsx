@@ -1,6 +1,5 @@
 import { Box, Button, CardMedia, Modal } from "@mui/material";
 import React from "react";
-import { useLocation } from "react-router-dom";
 
 interface IModalWindowProps {
   onClose?: () => void;
@@ -29,9 +28,6 @@ const ModalWindow: React.FC<IModalWindowProps> = ({
     p: 4,
     color: "primary",
   };
-  const location = useLocation();
-  console.log(location.pathname);
-
   return (
     <Modal
       onClose={onClose}

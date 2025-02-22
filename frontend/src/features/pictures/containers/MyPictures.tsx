@@ -11,7 +11,7 @@ import {
   getPickedPicture,
   getPictures,
 } from "../picturesThunk.ts";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import {
@@ -32,7 +32,6 @@ const MyPictures = () => {
   const user = useAppSelector(selectUser);
   const params = useParams<{ idUser: string }>();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const pictures = useAppSelector(selectPictures);
   const loadingPictures = useAppSelector(selectPicturesLoading);
   const pickedPicture = useAppSelector(selectPickedPictures);
@@ -52,7 +51,6 @@ const MyPictures = () => {
     await dispatch(deletePictureById(id));
     if (params.idUser) await dispatch(getPictures(params.idUser));
   };
-  if (!user) navigate("/login");
 
   return (
     <>
