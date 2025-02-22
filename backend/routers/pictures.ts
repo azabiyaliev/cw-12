@@ -16,13 +16,18 @@ picturesRouter.get('/', async (
     try {
         if (idQuery) {
             const picturesByIdUser = await Picture.find({user: idQuery}).populate("user", "displayName");
-            if(!picturesByIdUser) res.status(404).send("Not Found");
+            if (!picturesByIdUser) res.status(404).send("Not Found");
             res.send(picturesByIdUser);
+        } else {
+            const pictures = await Picture.find().populate("user", "displayName");
+            res.status(200).json(pictures);
         }
-        const pictures = await Picture.find().populate("user", "displayName");
-        res.status(200).json(pictures);
-    } catch (e) {
-        next(e);
+    } catch (error) {
+        if (error instanceof Error.ValidationError) {
+            res.status(400).send(error);
+            return;
+        }
+        next(error);
     }
 })
 
@@ -31,15 +36,22 @@ picturesRouter.get('/:id', async (
     res,
     next) => {
     const id = req.params.id;
-    if (!id) {
-        res.status(400).send({error: "Missing ID"});
-        return;
-    }
+
     try {
-        const picture = await Picture.findById(id);
-        res.send(picture);
-    } catch (e) {
-        next(e);
+        if (!id) {
+            res.status(400).send({error: "Missing ID"});
+            return;
+        } else {
+            const picture = await Picture.findById(id);
+            res.send(picture);
+        }
+
+    } catch (error) {
+        if (error instanceof Error.ValidationError) {
+            res.status(400).send(error);
+            return;
+        }
+        next(error);
     }
 })
 
@@ -81,12 +93,12 @@ picturesRouter.delete('/:id', auth, permit("admin", "user"), async (
     const id = req.params.id;
     let reqWithUser = req as RequestWithUser;
     const userFromAuth = reqWithUser.user._id;
-    if(!id) {
+    if (!id) {
         res.status(400).send({error: "Missing ID"});
         return;
     }
     try {
-        if(reqWithUser.user.role === "admin") {
+        if (reqWithUser.user.role === "admin") {
             const deletePictureByAdmin = await Picture.findByIdAndDelete(id)
             res.send(deletePictureByAdmin);
         } else {

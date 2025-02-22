@@ -28,7 +28,6 @@ const MyPictures = () => {
     const pictures = useAppSelector(selectPictures);
     const loadingPictures = useAppSelector(selectPicturesLoading);
     const pickedPicture = useAppSelector(selectPickedPictures)
-    const userName = pictures[0].user?.displayName;
     const [open, setOpen] = React.useState(false);
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
@@ -43,122 +42,123 @@ const MyPictures = () => {
 
     const deletePicture = async (id: string) => {
         await dispatch(deletePictureById(id));
-        await dispatch(getPictures());
+        if (params.idUser)
+        await dispatch(getPictures(params.idUser));
     }
 
     return (
-        <Container maxWidth="lg">
-            <Box>
-                {loadingPictures ? (
-                    <CircularProgress/>
-                ) : (
-                    <>
-                        <Box>
-                            <Box sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                mt: 2,
-                                fontSize: 18,
-                                textTransform: "uppercase"
-                            }}>
-                                <Typography variant="h6">
-                                    {userName}`s Gallery
-                                </Typography>
-                                {(user && (user.role === "admin" || (user._id === params.idUser))) ?
-                                    (<Typography
-                                        sx={{
-                                            color: "inherit",
-                                            textDecoration: "none",
-                                            textTransform: "uppercase",
-                                            fontSize: 18,
-                                            mr: 1
-                                        }}
-                                        component={NavLink}
-                                        to={"/addNewPicture"}
-                                    >
-                                        Add new photo
-                                    </Typography>) : null}
+        <>
+            <Container maxWidth="lg">
+                <Box>
+                    {loadingPictures ? (
+                        <CircularProgress/>
+                    ) : (
+                        <>
+                            <Box>
+                                <Box sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    mt: 2,
+                                    fontSize: 18,
+                                    textTransform: "uppercase"
+                                }}>
+                                    <Typography variant="h6">
+                                        {pictures.length > 0 && pictures[0].user?.displayName ? pictures[0].user?.displayName : user && user.displayName}`s Gallery
+                                    </Typography>
+                                    {(user && (user.role === "admin" || (user._id === params.idUser))) ?
+                                        (<Typography
+                                            sx={{
+                                                color: "inherit",
+                                                textDecoration: "none",
+                                                textTransform: "uppercase",
+                                                fontSize: 18,
+                                                mr: 1
+                                            }}
+                                            component={NavLink}
+                                            to={"/addNewPicture"}
+                                        >
+                                            Add new photo
+                                        </Typography>) : null}
 
-                            </Box>
-                            {pictures.length === 0 && !loadingPictures ? (
-                                <Typography variant="h6">
-                                    No pictures yet
-                                </Typography>
-                            ) : (
-                                <Grid container direction={"row"} spacing={3}>
-                                    {pictures.map((picture) => {
-                                        return (
-                                            <>
-                                                    <Grid key={picture._id} size={4}>
-                                                        <Card sx={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            height: '93%',
-                                                            maxWidth: 345,
-                                                            mt: 5,
-                                                            borderRadius: 2,
-                                                            boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
-                                                            "&:hover": {boxShadow: 10}
-                                                        }}>
-                                                            <CardActionArea>
-                                                                <ModalWindow onClose={closeModal} open={open}
-                                                                             image={apiUrl + "/" + (pickedPicture ? pickedPicture.image : null)}
-                                                                             title={pickedPicture ? pickedPicture.title : ""}/>
-                                                                <CardMedia
-                                                                    style={{width: "100%"}}
-                                                                    height={400}
-                                                                    component="img"
-                                                                    image={apiUrl + "/" + picture.image}
-                                                                    title={picture.title}
-                                                                    onClick={() => {
-                                                                        void pictureView(picture._id)
+                                </Box>
+                                {pictures.length === 0 && !loadingPictures ? (
+                                    <Typography variant="h6">
+                                        No pictures yet
+                                    </Typography>
+                                ) : (
+                                    <Grid container direction={"row"} spacing={3}>
+                                        {pictures.map((picture) => {
+                                            return (
+                                                <Grid key={picture._id} size={4}>
+                                                    <Card sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        height: '93%',
+                                                        maxWidth: 345,
+                                                        mt: 5,
+                                                        borderRadius: 2,
+                                                        boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
+                                                        "&:hover": {boxShadow: 10}
+                                                    }}>
+                                                        <CardActionArea>
+                                                            <ModalWindow onClose={closeModal} open={open}
+                                                                         image={apiUrl + "/" + (pickedPicture ? pickedPicture.image : null)}
+                                                                         title={pickedPicture ? pickedPicture.title : ""}/>
+                                                            <CardMedia
+                                                                style={{width: "100%"}}
+                                                                height={400}
+                                                                component="img"
+                                                                image={apiUrl + "/" + picture.image}
+                                                                title={picture.title}
+                                                                onClick={() => {
+                                                                    void pictureView(picture._id)
+                                                                }}
+                                                            />
+                                                            <Box sx={{
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                height: "50%"
+                                                            }}>
+
+                                                                <CardContent
+                                                                    sx={{
+                                                                        display: "flex",
+                                                                        justifyContent: "space-between",
+                                                                        alignItems: "center"
                                                                     }}
-                                                                />
-                                                                <Box sx={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    height: "50%"
-                                                                }}>
-
-                                                                    <CardContent
-                                                                        sx={{
-                                                                            display: "flex",
-                                                                            justifyContent: "space-between",
-                                                                            alignItems: "center"
-                                                                        }}
+                                                                >
+                                                                    <Typography
+                                                                        variant="h6"
+                                                                        fontWeight="bold"
                                                                     >
-                                                                        <Typography
-                                                                            variant="h6"
-                                                                            fontWeight="bold"
-                                                                        >
-                                                                            {picture.title}
-                                                                        </Typography>
-                                                                        {(user && (user.role === "admin" || (user._id === picture.user._id))) ? (
-                                                                            <CardActions>
-                                                                                <IconButton
-                                                                                    onClick={() => deletePicture(picture._id)}>
-                                                                                    <DeleteIcon/>
-                                                                                </IconButton>
-                                                                            </CardActions>) : null}
-                                                                    </CardContent>
-                                                                </Box>
+                                                                        {picture.title}
+                                                                    </Typography>
+                                                                    {(user && (user.role === "admin" || (user._id === picture.user._id))) ? (
+                                                                        <CardActions>
+                                                                            <IconButton
+                                                                                onClick={() => deletePicture(picture._id)}>
+                                                                                <DeleteIcon/>
+                                                                            </IconButton>
+                                                                        </CardActions>) : null}
+                                                                </CardContent>
+                                                            </Box>
 
-                                                            </CardActionArea>
-                                                        </Card>
-                                                    </Grid>
+                                                        </CardActionArea>
+                                                    </Card>
+                                                </Grid>
+                                            )
+                                        })}
+                                    </Grid>
+                                )}
+                            </Box>
+                        </>
+                    )}
+                </Box>
+            </Container>
 
-                                            </>
 
-                                        )
-                                    })}
-                                </Grid>
-                            )}
-                        </Box>
-                    </>
-                )}
-            </Box>
-        </Container>
+        </>
 
     );
 };
