@@ -1,43 +1,53 @@
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {selectPickedPictures, selectPictures, selectPicturesLoading} from "../picturesSlice.ts";
-import {getPickedPicture, getPictures} from "../picturesThunk.ts";
 import React, {useEffect} from "react";
+import {getPickedPicture, getPictures} from "../picturesThunk.ts";
+import {NavLink, useParams} from "react-router-dom";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import {Card, CardActionArea, CardContent, CardMedia, CircularProgress, Typography} from "@mui/material";
+import ModalWindow from "../../../components/ModalWindow/ModalWindow.tsx";
 import {apiUrl} from "../../../globalConstants.ts";
 import Box from "@mui/material/Box";
-import ModalWindow from "../../../components/ModalWindow/ModalWindow.tsx";
-import {NavLink} from "react-router-dom";
 
-
-const Pictures = () => {
+const MyPictures = () => {
+    const params = useParams<{ idUser: string }>();
     const dispatch = useAppDispatch();
     const pictures = useAppSelector(selectPictures);
-    const loading = useAppSelector(selectPicturesLoading);
+    const loadingPictures = useAppSelector(selectPicturesLoading);
     const pickedPicture = useAppSelector(selectPickedPictures)
-    console.log(pictures)
+    const userName = pictures[0].user?.displayName;
     const [open, setOpen] = React.useState(false);
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
-
-    useEffect(() => {
-        dispatch(getPictures());
-    }, [dispatch])
-
     const pictureView = async (id: string) => {
         openModal();
         await dispatch(getPickedPicture(id));
     }
-
+    useEffect(() => {
+        if(params.idUser)
+        dispatch(getPictures(params.idUser));
+    }, [dispatch, params.idUser]);
     return (
         <Container maxWidth="lg">
+            <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", mt: 2, fontSize: 18, textTransform: "uppercase"}}>
+                <Typography variant="h6">
+                    {userName}`s Gallery
+                </Typography>
+                <Typography
+                    sx={{ color: "inherit", textDecoration: "none", textTransform: "uppercase", fontSize: 18, mr: 1}}
+                    component={NavLink}
+                    to={"/addNewPicture"}
+                >
+                    Add new photo
+                </Typography>
+            </Box>
             <Grid container direction={"row"} spacing={3}>
-                {loading ? (
+                {loadingPictures ? (
                     <CircularProgress/>
                 ) : (
                     <>
-                        {pictures.length === 0 && !loading ? (
+                        {pictures.length === 0 && !loadingPictures ? (
                             <Typography variant="h6">
                                 No pictures yet
                             </Typography>
@@ -83,15 +93,6 @@ const Pictures = () => {
                                                                 >
                                                                     {picture.title}
                                                                 </Typography>
-                                                                <Typography
-                                                                    variant="h6" textAlign="center"
-                                                                    sx={{textDecoration: "none", color: "inherit"}}
-                                                                    fontWeight="bold"
-                                                                    to={`/users/${picture.user._id}`}
-                                                                    component={NavLink}
-                                                                >
-                                                                    От: {picture.user.displayName}
-                                                                </Typography>
                                                             </CardContent>
                                                         </Box>
                                                     </Box>
@@ -107,7 +108,8 @@ const Pictures = () => {
                 )}
             </Grid>
         </Container>
+
     );
 };
 
-export default Pictures;
+export default MyPictures;

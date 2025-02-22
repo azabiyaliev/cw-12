@@ -19,8 +19,6 @@ export const selectPictures = (state: RootState) => state.pictures.pictures;
 export const selectPicturesLoading = (state: RootState) => state.pictures.loading;
 export const selectPickedPictures = (state: RootState) => state.pictures.pickedPicture;
 
-
-
 export const picturesSlice = createSlice({
     name: "pictures",
     initialState,

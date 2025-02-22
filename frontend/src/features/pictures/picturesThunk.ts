@@ -2,21 +2,14 @@ import {IPicture} from "../../types";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosAPI from "../../axiosAPI.ts";
 
-export const getPictures = createAsyncThunk<IPicture[], void>(
+export const getPictures = createAsyncThunk<IPicture[], string | undefined>(
     "pictures/getPictures",
-    async () => {
-        const response = await axiosAPI.get<IPicture[]>("/pictures")
-        return response.data;
+    async (id) => {
+        const url = id ? `pictures/?user=${id}` : "/pictures";
+        const response = await axiosAPI.get<IPicture[]>(url);
+        return response.data || [];
     }
 )
-
-//export const getPickedCocktail = createAsyncThunk<ICocktail, string>(
-//     "cocktails/getPickedCocktail",
-//     async (cocktail) => {
-//         const response = await axiosAPI.get<ICocktail>(`/cocktails/${cocktail}`)
-//         return response.data;
-//     }
-// )
 
 export const getPickedPicture = createAsyncThunk<IPicture, string>(
     "pictures/getPickedPictures",
