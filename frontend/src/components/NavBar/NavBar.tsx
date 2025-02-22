@@ -20,7 +20,7 @@ const NavBar = () => {
                             color: "inherit",
                             textTransform: "uppercase"
                         }}>
-                            CW-12
+                            Pictures Gallery
                         </Typography>
                         {user ? <UserMenu user={user}/> : <AnonymousMenu/>}
                     </Toolbar>

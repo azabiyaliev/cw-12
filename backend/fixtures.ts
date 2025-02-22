@@ -67,9 +67,14 @@ const run = async () => {
             image: "fixtures/RealMadrid.jpg",
         },
         {
-            user: Lazlo._id,
+            user: Martin._id,
             title: "Учиха Итачи",
             image: "fixtures/UchihaItachi.jpg",
+        },
+        {
+            user: Lazlo._id,
+            title: "Тигр",
+            image: "fixtures/tiger.jpg",
         },
     )
 

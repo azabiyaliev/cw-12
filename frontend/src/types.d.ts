@@ -44,4 +44,11 @@ export interface GlobalError {
     error: string;
 }
 
+export interface IPicture {
+    _id: string;
+    user: IUser;
+    title: string;
+    image: string;
+}
+
 
